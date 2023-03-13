@@ -14,7 +14,7 @@ function early_exit {
 
     if findmnt "$shared_dir" >/dev/null 2>&1; then
         sudo sh -c "echo -e \"206\n206\n[ERROR] Early shutdown while executing initial bootstrap.\" >${shared_dir}/atlas_done"
-    else
+    elif [ ! -f /home/atlas/noshutdown ]; then
         sudo shutdown now
     fi
     
