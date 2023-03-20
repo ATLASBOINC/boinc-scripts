@@ -31,6 +31,8 @@ grep -E -m 1 -s "^.*maxEvents =[^0-9]*[0-9]+" <(tail -F -n +1 --pid ${$} ${targe
 
 # it's a multicore if ATHENA_PROC_NUMBER is in the log before maxEvents
 # it's a singlecore if ATHENA_PROC_NUMBER is missing
+# if it's AthenaMT (Run-3 simulation) then ATHENA_PROC_NUMBER is missing and
+# everything is logged to the main log whether single or multicore
 pattrn="^.*ATHENA_PROC_NUMBER set to[^0-9]*"
 n_workers="$(sed -e "0,/${pattrn}/ s/${pattrn}\([0-9]\+\).*/\1/p" -n ${target_location}/${main_log_name})"
 [[ ! "${n_workers}" ]] && n_workers="1"

@@ -20,7 +20,7 @@ function get__n_events__n_workers {
     # it's a multicore if ATHENA_PROC_NUMBER is in the log before maxEvents
     pattrn="^.*ATHENA_PROC_NUMBER set to[^0-9]*"
     n_workers="$(sed -e "0,/${pattrn}/ s/${pattrn}\([0-9]\+\).*/\1/p" -n ${logfile})"
-    # it's a singlecore if ATHENA_PROC_NUMBER is missing
+    # it's a singlecore or AthenaMT (Run-3 simulation) if ATHENA_PROC_NUMBER is missing
     [[ ! "${n_workers}" ]] && n_workers="1"
     
     echo "n_workers=\"${n_workers}\"" >>${para_file}
@@ -246,7 +246,7 @@ do
         for (( i=0; i<n_workers; ++i ))
         do
             # get all events that are already finished
-            evlist_per_worker="$(grep "^.*ISFG4SimSvc.*INFO.*Event nr.*took.*New average" ${logfile_arr[${i}]})"
+            evlist_per_worker="$(grep "^.*INFO.*Event .*took.*New average" ${logfile_arr[${i}]})"
 
             if [[ "${evlist_per_worker}" ]]
             then
